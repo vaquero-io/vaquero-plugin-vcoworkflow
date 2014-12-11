@@ -3,8 +3,8 @@ provider:
   name: vsphere
   structure:
     
-  	platform:
-  	  path:
+    platform:
+      path:
       references:
         - vcenter
         - compute
@@ -46,7 +46,7 @@ provider:
             match: 'regex'
         components:
 
-  	environment:
+    environment:
   	
     vcenter:
       path: 'infrastrucure/'
@@ -82,7 +82,7 @@ provider:
           type: array
           	type: IP
 
-  	network:
+    network:
       path: 'infrastructure/'
       references:
       params:
@@ -95,7 +95,7 @@ provider:
           type: integer
           range: 1..24
 
-  	compute:
+    compute:
       path: 'infrastructure/'
       references:
       params:
