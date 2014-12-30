@@ -1,7 +1,7 @@
 provider:
-  name: vsphere
+  name: putenv-vsphere
   version: 0.1.0.pre
-  location:
+  location: https://github.com/ActiveSCM/putenv-vsphere.git
   structure:
 
     platform:
@@ -18,19 +18,19 @@ provider:
           type: string
           match: 'regex'
         environments:
-          type: array
-          	type: string
-          	match: 'regex'
+          array:
+            type: string
+            match: 'regex'
         nodename:
-          type: array
-          	type: string
-          	match: 'regex'
+          array:
+            type: string
+            match: 'regex'
         pools:
           count:
             type: integer
             range: 1..100
           runlist:
-            type: string
+            array:
               type: string
               match: 'regex'
           componentrole:
@@ -80,8 +80,8 @@ provider:
         envsubdomain:
           type: boolean
         dnsips:
-          type: array
-          	type: IP
+          array:
+            type: IP
 
     network:
       path: 'infrastructure/'
@@ -107,7 +107,7 @@ provider:
           type: integer
           range: 1..16
         drive:
-          type: hash
+          hash:
             mount:
               type: string
               match: 'regex'
