@@ -1,8 +1,9 @@
-? "%YAML 1.2"
 provider:
   name: vsphere
+  version: 0.1.0.pre
+  location:
   structure:
-    
+
     platform:
       path:
       references:
@@ -47,7 +48,7 @@ provider:
         components:
 
     environment:
-  	
+
     vcenter:
       path: 'infrastrucure/'
       references:
