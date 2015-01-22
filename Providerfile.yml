@@ -11,12 +11,6 @@ provider:
         - compute
         - network
       params:
-        name:
-          type: string
-          match: 'regex'
-        description:
-          type: string
-          match: 'regex'
         environments:
           array:
             type: string
@@ -25,7 +19,7 @@ provider:
           array:
             type: string
             match: 'regex'
-        pools:
+        _pools:
           count:
             type: integer
             range: 1..100
@@ -46,8 +40,13 @@ provider:
             type: string
             match: 'regex'
         components:
+          default:
+            <<:
+              type: string
+              match: 'regex'
 
-    environment:
+    environments:
+      path: 'environments/'
 
     vcenter:
       path: 'infrastrucure/'
