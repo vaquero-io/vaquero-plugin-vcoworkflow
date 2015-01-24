@@ -95,7 +95,7 @@ provider:
           type: integer
           range: 1..24
 
-    compute:
+    _compute:
       path: 'infrastructure/'
       references:
       params:
