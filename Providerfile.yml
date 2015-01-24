@@ -45,10 +45,7 @@ provider:
               type: string
               match: 'regex'
 
-    environments:
-      path: 'environments/'
-
-    vcenter:
+    vcenters:
       path: 'infrastrucure/'
       references:
       params:
@@ -82,7 +79,7 @@ provider:
           array:
             type: IP
 
-    network:
+    networks:
       path: 'infrastructure/'
       references:
       params:
@@ -95,7 +92,7 @@ provider:
           type: integer
           range: 1..24
 
-    _compute:
+    computes:
       path: 'infrastructure/'
       references:
       params:
