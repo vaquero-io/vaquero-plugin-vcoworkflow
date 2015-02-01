@@ -2,52 +2,36 @@ provider:
   name: putenv-vsphere
   version: 0.1.0.pre
   location: https://github.com/ActiveSCM/putenv-vsphere.git
+
   structure:
+
+    require:
+      - vcenter
+      - networks
+      - compute
 
     platform:
       path:
-      references:
-        - vcenter
-        - compute
-        - network
       params:
-        environments:
+        count:
+          type: integer
+          range: 1..100
+        runlist:
           array:
             type: string
             match: 'regex'
-        nodename:
+        componentrole:
+          type: string
+          match: 'regex'
+        chefserver:
+          type: string
+          match: 'regex'
+        addresses:
           array:
-            type: string
-            match: 'regex'
-        _pools:
-          count:
-            type: integer
-            range: 1..100
-          runlist:
-            array:
-              type: string
-              match: 'regex'
-          componentrole:
-            type: string
-            match: 'regex'
-          compute:
-            type: string
-            match: 'regex'
-          network:
-            type: string
-            match: 'regex'
-          vcenter:
-            type: string
-            match: 'regex'
-        components:
-          default:
-            <<:
-              type: string
-              match: 'regex'
+            type: IP
 
     vcenters:
       path: 'infrastrucure/'
-      references:
       params:
         location:
           type: string
@@ -81,7 +65,6 @@ provider:
 
     networks:
       path: 'infrastructure/'
-      references:
       params:
         vlanid:
           type: string
@@ -94,7 +77,6 @@ provider:
 
     computes:
       path: 'infrastructure/'
-      references:
       params:
         ram:
           type: integer
