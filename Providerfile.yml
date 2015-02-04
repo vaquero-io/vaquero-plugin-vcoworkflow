@@ -19,44 +19,44 @@ provider:
         runlist:
           array:
             type: string
-            match: 'regex'
+            match: /^[A-Za-z_#]+$/
         componentrole:
           type: string
-          match: 'regex'
+          match: /^[A-Za-z_#]+$/
         chefserver:
           type: string
-          match: 'regex'
+          match: /^[A-Za-z_#]+$/
         addresses:
           array:
             type: IP
 
-    vcenters:
-      path: 'infrastrucure/'
+    vcenter:
+      path: 'infrastructure/'
       params:
         location:
           type: string
-          match: 'regex'
+          match: /^[A-Za-z_#]+$/
         host:
           type: string
-          match: 'regex'
+          match: /^[A-Za-z_#]+$/
         datacenter:
           type: string
-          match: 'regex'
+          match: /^[A-Za-z_#]+$/
         imagefolder:
           type: string
-          match: 'regex'
+          match: /^[A-Za-z_#]+$/
         destfolder:
           type: string
-          match: 'regex'
+          match: /^[A-Za-z_#]+$/
         resourcepool:
           type: string
-          match: 'regex'
+          match: /^[A-Za-z_#]+$/
         datastore:
           type: string
-          match: 'regex'
+          match: /^[A-Za-z_#]+$/
         domain:
           type: string
-          match: 'regex'
+          match: /^[A-Za-z_#]+$/
         envsubdomain:
           type: boolean
         dnsips:
@@ -68,14 +68,14 @@ provider:
       params:
         vlanid:
           type: string
-          match: 'regex'
+          match: /^[A-Za-z_#]+$/
         gateway:
           type: IP
         netmask:
           type: integer
           range: 1..24
 
-    computes:
+    compute:
       path: 'infrastructure/'
       params:
         ram:
@@ -88,10 +88,10 @@ provider:
           hash:
             mount:
               type: string
-              match: 'regex'
+              match: /^[A-Za-z_#]+$/
             capacity:
               type: integer
               range: 8..2048
         image:
           type: string
-          match: 'regex'
+          match: /^[A-Za-z_#]+$/

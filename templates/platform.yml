@@ -99,7 +99,7 @@ platform:
   #       - 'role[loc_uswest]'
   #       - 'role[base]'
   #     componentrole: 'role[aw_#]'
-  #     chefserver: https://chef
+  #     chefserver: https://manage.chef.io
   #
   #
   pools:
@@ -115,3 +115,26 @@ platform:
       chefserver:
       addresses:
         -
+
+  # Components define the actual nodes in the platform and a passed as a hash to the provider plugin.
+  #
+  # Example
+  #
+  # components:
+  #
+  #   api:
+  #     <<: *webdefault
+  #     compute: prodapi
+  #     addresses:
+  #       - 10.0.0.1
+  #       - 10.0.0.2
+  #
+  #   aui:
+  #     <<: *webdefault
+  #     count: 4
+  #     addresses:
+  #       - 10.10.0.1
+  #       - 10.10.0.2
+  #       - 10.10.0.3
+  #       - 10.10.0.4
+  components:
