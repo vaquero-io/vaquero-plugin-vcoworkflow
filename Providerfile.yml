@@ -1,7 +1,7 @@
 provider:
-  name: putenv-vsphere
+  name: vcoworkflow
   version: 0.1.0.pre
-  location: https://github.com/ActiveSCM/putenv-vsphere.git
+  location: https://github.com/activenetwork-automation/putenv-vcoworkflow.git
 
   structure:
 
