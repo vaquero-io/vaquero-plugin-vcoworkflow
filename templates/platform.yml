@@ -1,7 +1,7 @@
 platform:
-  product:  <>
-  provider: <>
-  plugin_version: <>
+  product:
+  provider: putenv-vcoworkflow
+  plugin_version: 0.1.0.pre
 
   # Comments are based on general platform definition file options.
   # When creating custom provider plugin, update the comments
@@ -28,7 +28,6 @@ platform:
   # environment    environment name from the key above
   # component      component name
   # instance       single leading zero 0..9, up to count of component pool
-  # geo            first letter of geo key value
   # 'string'       any single quoted string, escape char not evaluated
   #
   # Example: array of strings
@@ -45,7 +44,7 @@ platform:
     - 'node'
     - instance
 
-  # You can add any other custom attributes to the platform definition
+  # You can add any other custom attributes to the platform definition  NOT YET IMPLEMENTED
   # by creating additional yml files with key values. The referenced
   # files are, by convention, assumed to have the following structure:
   #
@@ -78,21 +77,18 @@ platform:
   # though you can add additional keys either through references files
   # or directly.
   #
-  # vcenter         reference to record set in vcenter required file
-  # network         reference to record set in network required file
   # compute         reference to record set in compute required file
+  # annotations     list of tags to apply to vm during vco workflow
   # count           The number of components in the load balance pool
   # runlist         Chef runlist(s) for the node, array of strings
   # componentrole   optional custom role created by substituting the component name for # in the supplied string
   # chefserver      url for chef server
-  # addresses       not necessary to define specific values in a pool definition, must include array of IP in component
   #
   # Example
   #
   # pools:
   #   webdefault: &webdefault
-  #     vcenter: nonprod
-  #     network: devweb
+  #     annotations: devweb
   #     compute: nonprodweb
   #     count: 2
   #     runlist:
@@ -105,16 +101,13 @@ platform:
   pools:
 
     defaultpool: &defaultpool
-      vcenter:
-      network:
+      annotations:
       compute:
       count:
       runlist:
         -
       componentrole:
       chefserver:
-      addresses:
-        -
 
   # Components define the actual nodes in the platform and a passed as a hash to the provider plugin.
   #
@@ -125,16 +118,8 @@ platform:
   #   api:
   #     <<: *webdefault
   #     compute: prodapi
-  #     addresses:
-  #       - 10.0.0.1
-  #       - 10.0.0.2
   #
   #   aui:
   #     <<: *webdefault
   #     count: 4
-  #     addresses:
-  #       - 10.10.0.1
-  #       - 10.10.0.2
-  #       - 10.10.0.3
-  #       - 10.10.0.4
   components:

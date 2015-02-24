@@ -6,74 +6,31 @@ provider:
   structure:
 
     require:
-      - vcenter
-      - networks
       - compute
+      - annotations
 
     platform:
       path:
       params:
+        workflowname:
+          type: string
+          match: '^(?:[\w-]+\/?)+\z'
+        reservation:
+          type: string
+          match: '^(?:[\w-]+\/?)+\z'
         count:
           type: integer
-          range: 1..100
+          range: 1..40
         runlist:
           array:
             type: string
-            match: /^[A-Za-z_#]+$/
+            match: '(role|recipe)\[([-_a-zA-Z0-9]+)\]'
         componentrole:
           type: string
-          match: /^[A-Za-z_#]+$/
+          match: '(role|recipe)\[([-_a-zA-Z0-9#]+)\]'
         chefserver:
           type: string
-          match: /^[A-Za-z_#]+$/
-        addresses:
-          array:
-            type: IP
-
-    vcenter:
-      path: 'infrastructure/'
-      params:
-        location:
-          type: string
-          match: /^[A-Za-z_#]+$/
-        host:
-          type: string
-          match: /^[A-Za-z_#]+$/
-        datacenter:
-          type: string
-          match: /^[A-Za-z_#]+$/
-        imagefolder:
-          type: string
-          match: /^[A-Za-z_#]+$/
-        destfolder:
-          type: string
-          match: /^[A-Za-z_#]+$/
-        resourcepool:
-          type: string
-          match: /^[A-Za-z_#]+$/
-        datastore:
-          type: string
-          match: /^[A-Za-z_#]+$/
-        domain:
-          type: string
-          match: /^[A-Za-z_#]+$/
-        envsubdomain:
-          type: boolean
-        dnsips:
-          array:
-            type: IP
-
-    networks:
-      path: 'infrastructure/'
-      params:
-        vlanid:
-          type: string
-          match: /^[A-Za-z_#]+$/
-        gateway:
-          type: IP
-        netmask:
-          type: integer
-          range: 1..24
+          match: '^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$'
 
     compute:
       path: 'infrastructure/'
@@ -88,10 +45,18 @@ provider:
           hash:
             mount:
               type: string
-              match: /^[A-Za-z_#]+$/
+              match: '((?:[a-zA-Z]\:){0,1}(?:[\\/][\w.]+){1,})'
             capacity:
               type: integer
-              range: 8..2048
+              range: 4096..2048000
         image:
           type: string
-          match: /^[A-Za-z_#]+$/
+          match: '^(?:[.\w-]+\/?)+\z'
+
+    annotations:
+      path: 'infrastructure/'
+      params:
+        tags:
+          array:
+            type: string
+            match: '^(?:[.\w-]+\/?)+\z'

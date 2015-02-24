@@ -1,4 +1,4 @@
-putenv-vsphere
-==============
+putenv-vcoworkflow
+==================
 
-vSphere provider for putenv virtualization provisioner
+vmware vco provider for putenv virtualization platform provisioner

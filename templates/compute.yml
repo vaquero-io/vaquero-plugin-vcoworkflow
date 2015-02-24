@@ -9,6 +9,7 @@ compute:
   #     drive:
   #       mount: '/media/data'\
   #       capacity: 8192
+  #     image: 'centos-7'
   #
   #   prod:
   #     cpu: 2
@@ -23,3 +24,4 @@ compute:
     drive:
       mount:
       capacity:
+    image:
