@@ -12,6 +12,9 @@ provider:
     platform:
       path:
       params:
+        orchestratorapi:
+          type: string
+          match:
         workflowname:
           type: string
           match: '^(?:[\w-]+\/?)+\z'
