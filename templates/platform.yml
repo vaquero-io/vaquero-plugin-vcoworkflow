@@ -1,11 +1,16 @@
 platform:
-  product:
+
+  # The name of the provider to use.
   provider: putenv-vcoworkflow
+
+  # The version of the provider
   plugin_version: 0.1.0.pre
 
-  # Comments are based on general platform definition file options.
-  # When creating custom provider plugin, update the comments
-  # based on the specific requirements of the provider.
+  # The product name for the whole platform.
+  # This will be used as the value for the Chef Org,
+  # as well as other things...
+  # product: myproduct
+  product:
 
   # Platform have one or more environment.
   #
@@ -83,6 +88,9 @@ platform:
   # runlist         Chef runlist(s) for the node, array of strings
   # componentrole   optional custom role created by substituting the component name for # in the supplied string
   # chefserver      url for chef server
+  # orchestratorapi URL of the vCenter Orchestrator REST API
+  # workflowname    Name of the workflow within Orchestrator to provision with
+  # reservation     Name of the vCAC Reservation to provision against.
   #
   # Example
   #
@@ -95,19 +103,25 @@ platform:
   #       - 'role[loc_uswest]'
   #       - 'role[base]'
   #     componentrole: 'role[aw_#]'
-  #     chefserver: https://manage.chef.io
+  #     chefserver: 'https://manage.chef.io'
+  #     orchestratorapi: 'https://vco.example.com:8281/''
+  #     workflowname: 'Request Component'
+  #     reservation: 'nonprodlinux'
   #
   #
   pools:
 
     defaultpool: &defaultpool
-      annotations:
       compute:
+      annotations:
       count:
       runlist:
         -
       componentrole:
       chefserver:
+      orchestratorapi:
+      workflowname:
+      reservation:
 
   # Components define the actual nodes in the platform and a passed as a hash to the provider plugin.
   #
