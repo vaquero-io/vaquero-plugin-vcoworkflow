@@ -19,7 +19,16 @@ module Putenv
           node: nil
         }.merge(options)
 
+        if options[:node] && options[:count]
+          fail(IOError, 'Cannot specify both :node and :count!')
+        end
+
+        if options[:node] || options[:count] && !options[:component]
+          fail(IOError, 'Must specify :component if requesting :node or :count!')
+        end
+
         puts "called putenv-vcoworkflow with: #{env.to_yaml}"
+        puts "and options #{options}"
 
         # ================================================================
         # Just do everything
