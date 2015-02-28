@@ -42,12 +42,25 @@ module Putenv
         # Pull auth from environment
         auth = VcoWorkflows::Cli::Auth.new
 
+        # Get the workflow. We'll grab it from the platform orchestrator here
+        # to get ourselves set up. When we actually iterate through the
+        # components we'll refresh the workflow based on component data, in
+        # case there is a customization for whatever reason.
+
+        # Set the connection options
+        wfoptions = {
+          url: env['orchestrator']['vco_url'],
+          username: auth.username,
+          password: auth.password,
+          verify_ssl: false
+        }
+        if env['orchestrator']['workflow_id']
+          wfoptions[:id] = env['orchestrator']['workflow_id']
+        end
+
         # Get the workflow
-        wf = VcoWorkflows::Workflow.new(workflow,
-                                        url: server,
-                                        username: auth.username,
-                                        password: auth.password,
-                                        verify_ssl: false)
+        wf = VcoWorkflows::Workflow.new(env['orchestrator']['workflow_name'], wfoptions)
+
         # Grab the service to make subsequent workflow calls simpler
         wf_service = wf.service
         wf_id = wf.id
