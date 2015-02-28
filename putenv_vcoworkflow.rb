@@ -93,7 +93,10 @@ module Putenv
           running_jobs << wf.execute
         end
 
-        puts "The following executions of #{}"
+        puts "The following executions of #{wf.name} have been submitted:"
+        running_jobs.each do |job|
+          puts "  - #{job}"
+        end
       end
     end
   end
