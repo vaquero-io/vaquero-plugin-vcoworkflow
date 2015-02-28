@@ -12,31 +12,25 @@ provider:
     platform:
       path:
       params:
-        orchestrator:
+        vco_url:
           type: string
-          match: '([a-zA-Z]{3,}):\/\/(([\w]+\.)+[\w]+)(:[0-9]+)?(\/[\w.\/?%&=]*)?'
-        workflowname:
-          type: string
-          match: '^(?:[\w-]+\/?)+\z'
-        reservationpolicy:
+          match: '([a-zA-Z]{3,}):\/\/(([\w]+\.)+[\w]+)(:[0-9]+)?\/?$'
+        workflow_name:
           type: string
           match: '^(?:[\w-]+\/?)+\z'
-        chefserver:
+        reservation_policy:
           type: string
-          match: '([a-zA-Z]{3,}):\/\/(([\w]+\.)+[\w]+)(:[0-9]+)?(\/[\w.\/?%&=]*)?'
+          match: '^(?:[\w-]+\/?)+\z'
         count:
           type: integer
           range: 1..40
-        runlist:
+        run_list:
           array:
             type: string
             match: '(role|recipe)\[([-_a-zA-Z0-9]+)\]'
-        componentrole:
+        component_role:
           type: string
           match: '(role|recipe)\[([-_a-zA-Z0-9#]+)\]'
-#        chefserver:
-#          type: string
-#          match: '^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$'
 
     compute:
       path: 'infrastructure/'
@@ -47,14 +41,6 @@ provider:
         cpu:
           type: integer
           range: 1..16
-#        drive:
-#          hash:
-#            mount:
-#              type: string
-#              match: '((?:[a-zA-Z]\:){0,1}(?:[\\/][\w.]+){1,})'
-#            capacity:
-#              type: integer
-#              range: 4096..2048000
         image:
           type: string
           match: '^(?:[.\w-]+\/?)+\z'

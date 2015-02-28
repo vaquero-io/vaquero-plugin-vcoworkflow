@@ -12,6 +12,20 @@ platform:
   # product: myproduct
   product:
 
+  # vCenter Orchestrator target configuration
+  # vco_url               URL of the vCenter Orchestrator REST API (https://servername:8281/)
+  # workflow_name         Name of the workflow within Orchestrator to provision with
+  # workflow_id           Optional GUID of the workflow in vCO
+  # reservation_policy    Name of the vCAC Reservation to provision against.
+  # execute_on_behalf_of  vCO user account for which our workflow will make
+  #                       vCAC requests.
+  orchestrator: &orchestrator
+    vco_url:
+    workflow_name:
+    workflow_id:
+    reservation_policy:
+    execute_on_behalf_of:
+
   # Platform have one or more environment.
   #
   # Example: array of strings
@@ -82,47 +96,38 @@ platform:
   # though you can add additional keys either through references files
   # or directly.
   #
-  # orchestrator        URL of the vCenter Orchestrator REST API
-  # workflowname        Name of the workflow within Orchestrator to provision with
-  # reservationpolicy   Name of the vCAC Reservation to provision against.
-  # chefserver          url for chef server
   # compute             reference to record set in compute required file
   # annotations         list of tags to apply to vm during vco workflow
   # count               The number of components in the load balance pool
-  # runlist             Chef runlist(s) for the node, array of strings
-  # componentrole       optional custom role created by substituting the component name for # in the supplied string
+  # run_list            Chef run_list for the node, array of strings
+  # component_role      optional custom role created by substituting the
+  #                     component name for '#' in the supplied string
   #
   # Example
   #
   # pools:
   #   webdefault: &webdefault
-  #     orchestrator: 'https://vco.example.com:8281/''
-  #     workflowname: 'Request Component'
-  #     reservationpolicy: 'nonprodlinux'
-  #     chefserver: 'https://manage.chef.io'
   #     compute: nonprodweb
   #     annotations: devweb
   #     count: 2
-  #     runlist:
+  #     run_list:
   #       - 'role[loc_uswest]'
   #       - 'role[base]'
-  #     componentrole: 'role[aw-#]'
+  #     component_role: 'role[aw-#]'
   #
   #
   pools:
 
     defaultpool: &defaultpool
-      orchestrator:
-      workflowname:
-      reservationpolicy:
-      
+      <<: *orchestrator
+
       compute:
       annotations:
       count:
       
-      runlist:
+      run_list:
         -
-      componentrole:
+      component_role:
 
   # Components define the actual nodes in the platform and a passed as a hash to the provider plugin.
   #
