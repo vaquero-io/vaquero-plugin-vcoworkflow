@@ -82,46 +82,47 @@ platform:
   # though you can add additional keys either through references files
   # or directly.
   #
-  # compute         reference to record set in compute required file
-  # annotations     list of tags to apply to vm during vco workflow
-  # count           The number of components in the load balance pool
-  # runlist         Chef runlist(s) for the node, array of strings
-  # componentrole   optional custom role created by substituting the component name for # in the supplied string
-  # chefserver      url for chef server
-  # orchestratorapi URL of the vCenter Orchestrator REST API
-  # workflowname    Name of the workflow within Orchestrator to provision with
-  # reservation     Name of the vCAC Reservation to provision against.
+  # orchestrator        URL of the vCenter Orchestrator REST API
+  # workflowname        Name of the workflow within Orchestrator to provision with
+  # reservationpolicy   Name of the vCAC Reservation to provision against.
+  # chefserver          url for chef server
+  # compute             reference to record set in compute required file
+  # annotations         list of tags to apply to vm during vco workflow
+  # count               The number of components in the load balance pool
+  # runlist             Chef runlist(s) for the node, array of strings
+  # componentrole       optional custom role created by substituting the component name for # in the supplied string
   #
   # Example
   #
   # pools:
   #   webdefault: &webdefault
-  #     annotations: devweb
+  #     orchestrator: 'https://vco.example.com:8281/''
+  #     workflowname: 'Request Component'
+  #     reservationpolicy: 'nonprodlinux'
+  #     chefserver: 'https://manage.chef.io'
   #     compute: nonprodweb
+  #     annotations: devweb
   #     count: 2
   #     runlist:
   #       - 'role[loc_uswest]'
   #       - 'role[base]'
-  #     componentrole: 'role[aw_#]'
-  #     chefserver: 'https://manage.chef.io'
-  #     orchestratorapi: 'https://vco.example.com:8281/''
-  #     workflowname: 'Request Component'
-  #     reservation: 'nonprodlinux'
+  #     componentrole: 'role[aw-#]'
   #
   #
   pools:
 
     defaultpool: &defaultpool
+      orchestrator:
+      workflowname:
+      reservationpolicy:
+      
       compute:
       annotations:
       count:
+      
       runlist:
         -
       componentrole:
-      chefserver:
-      orchestratorapi:
-      workflowname:
-      reservation:
 
   # Components define the actual nodes in the platform and a passed as a hash to the provider plugin.
   #
