@@ -21,7 +21,7 @@ compute:
   default: &default
     cpu:
     ram:
-    drive:
-      mount:
-      capacity:
+#    drive:
+#      mount:
+#      capacity:
     image:
