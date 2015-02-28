@@ -69,20 +69,18 @@ module Putenv
         # attributes we need into a form for the underlying engine
         # (in this case, vcoworkflows gem), then execute it.
         env['components'].each do |name, component|
-          # TODO: Where do we deal with things like chefserver?
-
-          # Build up a parameter array
+          # Build up a parameter array for the workflow from our environment
           params = {}
           params['component']    = name
           params['businessUnit'] = env['product']
           params['environment']  = env['environment']
-          params['onBehalfOf']   = component['executeas'] # TODO: This needs to be defined!
-          params['reservation']  = component['reservation']
+          params['onBehalfOf']   = component['execute_on_behalf_of']
+          params['reservation']  = component['reservation_policy']
           params['coreCount']    = component['compute']['cpu']
           params['ramMB']        = component['compute']['memory']
           params['image']        = component['compute']['image']
           params['location']     = component['location']
-          params['runlist']      = component['runlist'] + [component['componentrole']]
+          params['runlist']      = component['run_list'] + [component['component_role']]
           params['machineCount'] = component['count']
 
           # Get the workflow
