@@ -1,6 +1,19 @@
 # Ruby file to hold provider definition
 
-require 'vcoworkflows'
+begin
+  require 'vcoworkflows'
+rescue LoadError => e
+  if e.message =~ /vcoworkflows/
+    puts ''
+    puts '=========================================================='
+    puts 'ERROR: unable to find required \'vcoworkflows\' gem!'
+    puts 'Please install this gem before using this provider plugin.'
+    puts '=========================================================='
+    puts ''
+    exit
+  end
+  raise e
+end
 
 module Putenv
   # Platform
