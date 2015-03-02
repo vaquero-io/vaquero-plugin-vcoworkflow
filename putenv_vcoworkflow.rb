@@ -20,8 +20,9 @@ module Putenv
   class Platform
     # Provision
     module Provision
+      # rubocop:disable MethodLength, LineLength
+
       # Provision
-      #
       # Given an environment hash, provision the requested resources
       # @param [Hash] env - Environment hash
       def provision(env = nil, options = {})
@@ -102,6 +103,7 @@ module Putenv
           puts "  - #{job}"
         end
       end
+      # rubocop: enable MethodLength, LineLength
 
       # rubocop: disable LineLength
 
