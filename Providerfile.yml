@@ -21,6 +21,9 @@ provider:
         reservation_policy:
           type: string
           match: '\A(?:[\w-]+\/?)+\z'
+        execute_on_behalf_of:
+          type: string
+          match: '\A(?:([\w-]+)(?:@([\.\w-]+))?)\z'
         count:
           type: integer
           range: 1..40
