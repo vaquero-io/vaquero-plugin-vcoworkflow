@@ -12,20 +12,6 @@ platform:
   # product: myproduct
   product:
 
-  # vCenter Orchestrator target configuration
-  # vco_url               URL of the vCenter Orchestrator REST API (https://servername:8281/)
-  # workflow_name         Name of the workflow within Orchestrator to provision with
-  # workflow_id           Optional GUID of the workflow in vCO
-  # reservation_policy    Name of the vCAC Reservation to provision against.
-  # execute_on_behalf_of  vCO user account for which our workflow will make
-  #                       vCAC requests.
-  orchestrator: &orchestrator
-    vco_url:
-    workflow_name:
-    workflow_id:
-    reservation_policy:
-    execute_on_behalf_of:
-
   # Platform have one or more environment.
   #
   # Example: array of strings
@@ -96,12 +82,19 @@ platform:
   # though you can add additional keys either through references files
   # or directly.
   #
-  # compute             reference to record set in compute required file
-  # annotations         list of tags to apply to vm during vco workflow
-  # count               The number of components in the load balance pool
-  # run_list            Chef run_list for the node, array of strings
-  # component_role      optional custom role created by substituting the
-  #                     component name for '#' in the supplied string
+  # vCenter Orchestrator target configuration
+  # vco_url               URL of the vCenter Orchestrator REST API (https://servername:8281/)
+  # workflow_name         Name of the workflow within Orchestrator to provision with
+  # workflow_id           Optional GUID of the workflow in vCO
+  # reservation_policy    Name of the vCAC Reservation to provision against.
+  # execute_on_behalf_of  vCO user account for which our workflow will make
+  #                       vCAC requests.
+  # compute               reference to record set in compute required file
+  # annotations           list of tags to apply to vm during vco workflow
+  # count                 The number of components in the load balance pool
+  # run_list              Chef run_list for the node, array of strings
+  # component_role        optional custom role created by substituting the
+  #                       component name for '#' in the supplied string
   #
   # Example
   #
@@ -119,7 +112,11 @@ platform:
   pools:
 
     defaultpool: &defaultpool
-      <<: *orchestrator
+      vco_url:
+      workflow_name:
+      workflow_id:
+      reservation_policy:
+      execute_on_behalf_of:
 
       compute:
       annotations:
