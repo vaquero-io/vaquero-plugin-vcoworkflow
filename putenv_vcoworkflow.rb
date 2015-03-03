@@ -28,21 +28,11 @@ module Putenv
       def provision(env = nil, options = {})
         # Let's build our options hash...
         options = {
-          component: nil,
-          count: nil,
-          node: nil
+          named_nodes: true,
+          username: nil,
+          password: nil,
+          verify_ssl: true
         }.merge(options)
-
-        if options[:node] && options[:count]
-          fail(IOError, 'Cannot specify both :node and :count!')
-        end
-
-        if options[:node] || options[:count] && !options[:component]
-          fail(IOError, 'Must specify :component if requesting :node or :count!')
-        end
-
-        puts "called putenv-vcoworkflow with: #{env.to_yaml}"
-        puts "and options #{options}"
 
         # ================================================================
         # Just do everything
