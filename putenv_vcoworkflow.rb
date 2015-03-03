@@ -34,55 +34,34 @@ module Putenv
           verify_ssl: true
         }.merge(options)
 
-        # ================================================================
-        # Just do everything
-        # ================================================================
-
-        puts 'BUILDING ALL THE THINGS!!!'
-
-        # Create our list of running jobs
         running_jobs = []
-
-        # Pull auth from environment
-        auth = VcoWorkflows::Cli::Auth.new
-
-        # Get the workflow. We'll grab it from the platform orchestrator here
-        # to get ourselves set up. When we actually iterate through the
-        # components we'll refresh the workflow based on component data, in
-        # case there is a customization for whatever reason.
-
-        # Set the connection options
-        wfoptions = {
-          url: env['orchestrator']['vco_url'],
-          username: auth.username,
-          password: auth.password,
-          verify_ssl: false
-        }
-        if env['orchestrator']['workflow_id']
-          wfoptions[:id] = env['orchestrator']['workflow_id']
-        end
-
-        # Get the workflow
-        wf = VcoWorkflows::Workflow.new(env['orchestrator']['workflow_name'], wfoptions)
-
-        # For every component we're going to provision, translate the
-        # attributes we need into a form for the underlying engine
-        # (in this case, vcoworkflows gem), then execute it.
+        wf = nil
         env['components'].each do |name, component|
           # Get the workflow.
-          # If the component workflow name is the same as the last workflow
-          # we fetched, re-use the name and id to save on some API calls.
-          # If it's not, see if there's an ID specified and get the new
-          # workflow.
-          if wf.name.eql?(component['workflow_name'])
-            wf = VcoWorkflows::Workflow.new(wf.name, id: wf.id, service: wf.service)
+          if wf.nil?
+            # Steal the VcoWorkflows CLI auth class to yank values from the
+            # environment if we weren't given anything useful
+            auth = VcoWorkflows::Cli::Auth.new(username: options[:username],
+                                               password: options[:password])
+            wfoptions = {
+              url:        component['vco_url'],
+              username:   auth.username,
+              password:   auth.password,
+              verify_ssl: false
+            }
+            wfoptions[:id] = component['workflow_id'] if component['workflow_id']
+            wf = VcoWorkflows::Workflow.new(component['workflow_name'], wfoptions)
           else
-            id = component['workflow_id'] ? nil : component['workflow_id']
-            wf = VcoWorkflows::Workflow.new(component['workflow_name'], id: id, service: wf.service)
+            id = component['worfklow_id'] ? component['workflow_id'] : nil
+            wf = VcoWorkflows::Workflow.new(wf.name, id: id, wf.service)
           end
 
           # Set the parameters
-          wf.parameters = set_parameters(name, component)
+          if named_nodes
+            component['nodes'].each { |node| wf.parameters = set_parameters(name, component, node) }
+          else
+            wf.parameters = set_parameters(name, component)
+          end
 
           # Execute the workfow and grab the execution ID for later use
           running_jobs << wf.execute
