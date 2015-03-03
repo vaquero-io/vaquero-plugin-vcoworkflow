@@ -14,7 +14,7 @@ provider:
       params:
         vco_url:
           type: string
-          match: '([a-zA-Z]{3,}):\/\/(([\w]+\.)+[\w]+)(:[0-9]+)?\/?$'
+          match: '\A([\w-]{3,}):\/\/((?:[\w-]+\.?)+)(:[\d]+)?\/?\z'
         workflow_name:
           type: string
           match: '^(?:[\w-]+\/?)+\z'
