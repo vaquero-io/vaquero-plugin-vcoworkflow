@@ -81,8 +81,8 @@ module Putenv
       # @param [String] name Name of the current component
       # @param [Hash] component Hash of component definition data
       # @return [Hash] Input parameter hash for given to the workflow object
-      def set_parameters(name = nil, component = nil)
-        params = {}
+      def set_parameters(name = nil, component = nil, nodename = nil)
+        params                 = {}
         params['component']    = name
         params['businessUnit'] = env['product']
         params['environment']  = env['environment']
@@ -93,7 +93,14 @@ module Putenv
         params['image']        = component['compute']['image']
         params['location']     = component['location']
         params['runlist']      = component['run_list'] + [component['component_role']]
-        params['machineCount'] = component['count']
+        if @named_nodes && nodename.nil?
+          fail(IOError, 'Attempting to build named nodes, but no node name set')
+        elsif @named_nodes && !nodename.nil?
+          params['machineCount'] = 1
+          params['nodename']     = nodename
+        else
+          params['machineCount'] = component['count']
+        end
         params
       end
     end
