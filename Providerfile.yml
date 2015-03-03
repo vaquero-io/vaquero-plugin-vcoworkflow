@@ -17,10 +17,10 @@ provider:
           match: '\A([\w-]{3,}):\/\/((?:[\w-]+\.?)+)(:[\d]+)?\/?\z'
         workflow_name:
           type: string
-          match: '^(?:[\w-]+\/?)+\z'
+          match: '\A(?:[ \w-]+\/?)+\z'
         reservation_policy:
           type: string
-          match: '^(?:[\w-]+\/?)+\z'
+          match: '\A(?:[\w-]+\/?)+\z'
         count:
           type: integer
           range: 1..40
