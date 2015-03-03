@@ -34,6 +34,8 @@ module Putenv
           verify_ssl: true
         }.merge(options)
 
+        @named_nodes = options[:named_nodes]
+
         running_jobs = []
         wf = nil
         env['components'].each do |name, component|
@@ -53,7 +55,7 @@ module Putenv
             wf = VcoWorkflows::Workflow.new(component['workflow_name'], wfoptions)
           else
             id = component['worfklow_id'] ? component['workflow_id'] : nil
-            wf = VcoWorkflows::Workflow.new(wf.name, id: id, wf.service)
+            wf = VcoWorkflows::Workflow.new(wf.name, id: id, service: wf.service)
           end
 
           # Set the parameters
