@@ -23,7 +23,7 @@ provider:
           match: '\A(?:[\w-]+\/?)+\z'
         execute_on_behalf_of:
           type: string
-          match: '\A(?:([\w-]+)(?:@([\.\w-]+))?)\z'
+          match: '\A(?:([-\._\w-]+)(?:@([\.\w-]+))?)\z'
         count:
           type: integer
           range: 1..40
