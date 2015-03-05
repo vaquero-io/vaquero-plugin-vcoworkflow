@@ -58,15 +58,29 @@ module Putenv
             wf = VcoWorkflows::Workflow.new(wf.name, id: id, service: wf.service)
           end
 
-          # Set the parameters
+          # Set the parameters and execute
+          # If we're doing named nodes (i.e., chef nodes have specific names
+          # per the node naming convention in the platform definition), then
+          # we need to submit every indivitual node build request to the
+          # workflow separately.
           if named_nodes
-            component['nodes'].each { |node| wf.parameters = set_parameters(name, component, node) }
+            # quick sanity check; if number of nodes != count, fail
+            if component['nodes'].size != component['count']
+              fail(IOError, "Requested to build specific named nodes but number of nodes does not match count!")
+            end
+
+            # Fire off the build requests for each of the named nodes
+            component['nodes'].each do |node|
+              wf.parameters = set_parameters(name, component, node)
+              running_jobs << wf.execute
+            end
+
+          # Otherwise, we don't care what anything is named in chef, so submit
+          # build requests for the whole batch of components at once.
           else
             wf.parameters = set_parameters(name, component)
+            running_jobs << wf.execute
           end
-
-          # Execute the workfow and grab the execution ID for later use
-          running_jobs << wf.execute
         end
 
         puts "The following executions of #{wf.name} have been submitted:"
