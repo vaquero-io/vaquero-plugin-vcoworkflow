@@ -13,8 +13,8 @@ provider:
       path:
       params:
         vco_url:
-          type: string
-          match: '\A([\w-]{3,}):\/\/((?:[\w-]+\.?)+)(:[\d]+)?\/?\z'
+          type: URL
+          # match: '\A([\w-]{3,}):\/\/((?:[\w-]+\.?)+)(:[\d]+)?\/?\z'
         workflow_name:
           type: string
           match: '\A(?:[ \w-]+\/?)+\z'
