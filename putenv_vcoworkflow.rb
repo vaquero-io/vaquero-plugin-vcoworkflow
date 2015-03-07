@@ -32,10 +32,13 @@ module Putenv
           named_nodes: true,
           username: nil,
           password: nil,
-          verify_ssl: true
+          verify_ssl: true,
+          dry_run: false
         }.merge(options)
 
         @named_nodes = options[:named_nodes]
+
+        puts "\nExecuting build!\n"
 
         running_jobs = []
         wf = nil
@@ -73,14 +76,16 @@ module Putenv
             # Fire off the build requests for each of the named nodes
             component['nodes'].each do |node|
               wf.parameters = set_parameters(name, component, node)
-              running_jobs << wf.execute
+              print "Requesting '#{wf.name}' execution for component #{component}, node #{node}..."
+              execute(wf, options[:dry_run])
             end
 
           # Otherwise, we don't care what anything is named in chef, so submit
           # build requests for the whole batch of components at once.
           else
             wf.parameters = set_parameters(name, component)
-            running_jobs << wf.execute
+            print "Requesting '#{wf.name}' execution for component #{component}..."
+            execute(wf, options[:dry_run])
           end
         end
 
@@ -91,6 +96,15 @@ module Putenv
       end
       # rubocop: enable MethodLength, LineLength
 
+      def execute(workflow = nil, dry_run = false)
+        if dry_run
+          puts "\n#{workflow}"
+        else
+          running_jobs << workflow.execute
+          puts " (#{workflow.token.id})"
+        end
+      end
+        
       # rubocop: disable LineLength
 
       # set_parameters - Set up the input parameter hash for the workflow from
