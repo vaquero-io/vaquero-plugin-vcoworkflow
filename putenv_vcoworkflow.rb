@@ -125,10 +125,10 @@ module Putenv
         params['location']     = component['location']
         params['runlist']      = component['run_list'] + [component['component_role']]
 
-        # annotations::tags are marked required in the provider definition,
+        # attributes::tags are marked required in the provider definition,
         # so we'll just assume they're present. Health check should fail
         # before we get here.
-        params['annotationJS'] = component['annotations']['tags'].to_json
+        params['attributesJS'] = component['attributes']['tags'].to_json
 
         if @named_nodes && nodename.nil?
           fail(IOError, 'Attempting to build named nodes, but no node name set')

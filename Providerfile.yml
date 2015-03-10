@@ -7,7 +7,7 @@ provider:
 
     require:
       - compute
-      - annotations
+      - attributes
 
     platform:
       path:
@@ -48,7 +48,7 @@ provider:
           type: string
           match: '\A(?:[.\w-]+\/?)+\z'
 
-    annotations:
+    attributes:
       path: 'infrastructure/'
       params:
         tags:
