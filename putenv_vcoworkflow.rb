@@ -67,7 +67,7 @@ module Putenv
           # per the node naming convention in the platform definition), then
           # we need to submit every indivitual node build request to the
           # workflow separately.
-          if named_nodes
+          if @named_nodes
             # quick sanity check; if number of nodes != count, fail
             if component['nodes'].size != component['count']
               fail(IOError, "Requested to build specific named nodes but number of nodes does not match count!")
