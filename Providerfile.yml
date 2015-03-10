@@ -53,5 +53,9 @@ provider:
       params:
         tags:
           hash:
-            type: string
-            match: '\A(?:[\.\w-]+\/?)+\z'
+            attribute_name:
+              type: string
+              match: '\A(?:[\.\w-]+\/?)+\z'
+            attribute_value:
+              type: string
+              match: '\A(?:[\.\w-]+\/?)+\z'
