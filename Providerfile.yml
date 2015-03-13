@@ -57,14 +57,14 @@ provider:
 #                type: integer
 #                range: 1..1048576
 
-    attributes:
-      path: 'infrastructure/'
-      params:
-        tags:
-          hash:
-            attribute_name:
-              type: string
-              match: '\A(?:[\.\w-]+\/?)+\z'
-            attribute_value:
-              type: string
-              match: '\A(?:[\.\w-]+\/?)+\z'
+#    attributes:
+#      path: 'infrastructure/'
+#      params:
+#        tags:
+#          hash:
+#            attribute_name:
+#              type: string
+#              match: '\A(?:[\.\w-]+\/?)+\z'
+#            attribute_value:
+#              type: string
+#              match: '\A(?:[\.\w-]+\/?)+\z'
