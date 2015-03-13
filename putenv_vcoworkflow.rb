@@ -81,17 +81,17 @@ module Putenv
 
             # Fire off the build requests for each of the named nodes
             component['nodes'].each do |node|
-              print "Requesting '#{wf.name}' execution for component #{component}, node #{node}..."
-              execute(wf, options[:dry_run])
               wf.parameters = set_parameters(name, component, env['product'], env['environment'], node)
+              print "Requesting '#{wf.name}' execution for component #{name}, node #{node}..."
+              execute(wf, options[:dry_run], options[:verbose])
             end
 
-          # Otherwise, we don't care what anything is named in chef, so submit
-          # build requests for the whole batch of components at once.
+            # Otherwise, we don't care what anything is named in chef, so submit
+            # build requests for the whole batch of components at once.
           else
             wf.parameters = set_parameters(name, component, env['product'], env['environment'])
             print "Requesting '#{wf.name}' execution for component #{component}..."
-            execute(wf, options[:dry_run])
+            execute(wf, options[:dry_run], options[:verbose])
           end
         end
 
