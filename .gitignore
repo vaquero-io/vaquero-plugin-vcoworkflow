@@ -1,2 +1,14 @@
+# bundler workings
+Gemfile.lock
+.bundle/
+vendor/
+
+
+# Misc things
+platform.yml
 .idea/
 .ruby-version
+coverage/
+pkg/
+.DS_Store
+tmp/
