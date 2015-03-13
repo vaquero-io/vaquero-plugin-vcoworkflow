@@ -7,7 +7,7 @@ provider:
 
     require:
       - compute
-      - attributes
+#      - attributes
 
     platform:
       path:
