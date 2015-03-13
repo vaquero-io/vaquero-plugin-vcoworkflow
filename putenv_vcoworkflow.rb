@@ -22,6 +22,7 @@ module Putenv
     # Provision
     module Provision
       # rubocop:disable MethodLength, LineLength
+      # rubocop:disable CyclomaticComplexity, PerceivedComplexity
 
       # Provision
       # Given an environment hash, provision the requested resources
@@ -76,7 +77,7 @@ module Putenv
           if options[:named_nodes]
             # quick sanity check; if number of nodes != count, fail
             if component['nodes'].size != component['count']
-              fail(IOError, "Requested to build specific named nodes but number of nodes does not match count!")
+              fail(IOError, 'Requested to build specific named nodes but number of nodes does not match count!')
             end
 
             # Fire off the build requests for each of the named nodes
@@ -101,7 +102,8 @@ module Putenv
           puts "  - #{job}"
         end
       end
-      # rubocop: enable MethodLength, LineLength
+      # rubocop:enable MethodLength, LineLength
+      # rubocop:enable CyclomaticComplexity, PerceivedComplexity
 
       # Execute the constructed workflow
       # @param [VcoWorkflows::Workflow] workflow Prepared workflow for execution
@@ -115,8 +117,9 @@ module Putenv
           puts " (#{workflow.token.id})"
         end
       end
-        
-      # rubocop: disable LineLength
+      #
+
+      # rubocop: disable LineLength, MethodLength
 
       # set_parameters - Set up the input parameter hash for the workflow from
       # our environment definition for the current component.
@@ -150,6 +153,7 @@ module Putenv
         end
         params
       end
+      # rubocop:enable MethodLength, LineLength
     end
   end
 end
