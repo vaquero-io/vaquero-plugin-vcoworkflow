@@ -95,7 +95,8 @@ module Putenv
           end
         end
 
-        puts "The following executions of #{wf.name} have been submitted:"
+        return if options[:dry_run]
+        puts "\nThe following executions of #{wf.name} have been submitted:"
         running_jobs.each do |job|
           puts "  - #{job}"
         end
