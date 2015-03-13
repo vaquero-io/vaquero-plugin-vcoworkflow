@@ -123,8 +123,10 @@ platform:
       count:
       
       run_list:
-        -
+        - role[loc_uswest]
+        - role[active-base]
       component_role:
+        - role[#]
 
   # Components define the actual nodes in the platform and a passed as a hash to the provider plugin.
   #
