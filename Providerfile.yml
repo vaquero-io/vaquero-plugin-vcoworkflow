@@ -47,6 +47,15 @@ provider:
         image:
           type: string
           match: '\A(?:[.\w-]+\/?)+\z'
+#        drives:
+#          array:
+#            hash:
+#              mount:
+#                type: string
+#                match: '\A[\/|(?:[A-Z]:)]?(?:[@\.:\/\\\w-]+)+\z'
+#              sizeGB:
+#                type: integer
+#                range: 1..1048576
 
     attributes:
       path: 'infrastructure/'
