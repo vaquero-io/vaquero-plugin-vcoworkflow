@@ -33,6 +33,7 @@ module Putenv
           username: nil,
           password: nil,
           verify_ssl: true,
+          verbose: false,
           dry_run: false
         }.merge(options)
 
@@ -96,9 +97,13 @@ module Putenv
       end
       # rubocop: enable MethodLength, LineLength
 
-      def execute(workflow = nil, dry_run = false)
+      # Execute the constructed workflow
+      # @param [VcoWorkflows::Workflow] workflow Prepared workflow for execution
+      # @param [Boolean] dry_run flag for whether this is a dry-run or not
+      def execute(workflow = nil, dry_run = false, verbose = false)
         if dry_run
-          puts "\n#{workflow}"
+          puts "\nNot executing workflow due to --dry-run.\n"
+          puts "Workflow data (--verbose):\n#{workflow}\n" if verbose
         else
           running_jobs << workflow.execute
           puts " (#{workflow.token.id})"
