@@ -54,10 +54,17 @@ module Putenv
               password:   auth.password,
               verify_ssl: false
             }
-            wfoptions[:id] = component['workflow_id'] if component['workflow_id']
+            # Use the workflow GUID if one is provided in the component data
+            wfoptions[:id] = component['workflow_id'] ? component['workflow_id'] : nil
             wf = VcoWorkflows::Workflow.new(component['workflow_name'], wfoptions)
           else
-            id = component['worfklow_id'] ? component['workflow_id'] : nil
+            # id = component['worfklow_id'] ? component['workflow_id'] : nil
+            id = nil
+            if component['workflow_id']
+              id = component['workflow_id']
+            else
+              id = wf.id if component['workflow_name'].eql?(wf.name)
+            end
             wf = VcoWorkflows::Workflow.new(wf.name, id: id, service: wf.service)
           end
 
