@@ -84,7 +84,7 @@ module Putenv
             component['nodes'].each do |node|
               wf.parameters = set_parameters(name, component, env['product'], env['environment'], node)
               print "Requesting '#{wf.name}' execution for component #{name}, node #{node}..."
-              execute(wf, options[:dry_run], options[:verbose])
+              running_jobs << execute(wf, options[:dry_run], options[:verbose])
             end
 
             # Otherwise, we don't care what anything is named in chef, so submit
@@ -92,7 +92,7 @@ module Putenv
           else
             wf.parameters = set_parameters(name, component, env['product'], env['environment'])
             print "Requesting '#{wf.name}' execution for component #{component}..."
-            execute(wf, options[:dry_run], options[:verbose])
+            running_jobs << execute(wf, options[:dry_run], options[:verbose])
           end
         end
 
@@ -109,13 +109,15 @@ module Putenv
       # @param [VcoWorkflows::Workflow] workflow Prepared workflow for execution
       # @param [Boolean] dry_run flag for whether this is a dry-run or not
       def execute(workflow = nil, dry_run = false, verbose = false)
+        execution_id = nil
         if dry_run
           puts "\nNot executing workflow due to --dry-run.\n"
           puts "Workflow data (--verbose):\n#{workflow}\n" if verbose
         else
-          running_jobs << workflow.execute
+          execution_id = workflow.execute
           puts " (#{workflow.token.id})"
         end
+        execution_id
       end
       #
 
