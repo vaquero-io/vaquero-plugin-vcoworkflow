@@ -98,7 +98,7 @@ module Putenv
 
             # Steal the workflow name and WorkflowService from our last go-around
             wf = VcoWorkflows::Workflow.new(wf.name, id: id, service: wf.service)
-            
+
             # create an array for this workflow if it doesn't already exist
             running_jobs[wf.id] = [] unless running_jobs[wf.id]
           end
@@ -179,13 +179,10 @@ module Putenv
         params['ramMB']        = component['compute']['ram']
         params['image']        = component['compute']['image']
         params['location']     = component['location'] if component['location']
-        params['runlist']      = component['run_list'] + [component['component_role']]
 
-        # TODO: figure out how we're going to handle attributes / tags
-        # attributes::tags are marked required in the provider definition,
-        # so we'll just assume they're present. Health check should fail
-        # before we get here.
-        # params['attributesJS'] = component['attributes']['tags'].to_json
+        params['runlist'] = []
+        params['runlist'] << component['run_list'] if component['run_list']
+        params['runlist'] << component['component_role'] if component['component_role']
 
         if !nodename.nil?
           params['machineCount'] = 1
@@ -193,6 +190,13 @@ module Putenv
         else
           params['machineCount'] = component['count']
         end
+
+        # TODO: figure out how we're going to handle attributes / tags
+        # attributes::tags are marked required in the provider definition,
+        # so we'll just assume they're present. Health check should fail
+        # before we get here.
+        # params['attributesJS'] = component['attributes']['tags'].to_json
+
         params
       end
       # rubocop:enable MethodLength, LineLength
