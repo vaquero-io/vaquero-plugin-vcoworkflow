@@ -33,9 +33,9 @@ module Putenv
           named_nodes:    true,
           username:       nil,
           password:       nil,
-          verify_ssl:     true,
           watch:          false,
           watch_interval: 15,
+          verify_ssl:     nil,
           verbose:        false,
           dry_run:        false
         }.merge(options)
@@ -50,29 +50,56 @@ module Putenv
         env['components'].each do |name, component|
           # Get the workflow.
           if wf.nil?
+            # This is our first time. Be gentle.
+
             # Steal the VcoWorkflows CLI auth class to yank values from the
             # environment if we weren't given anything useful
             auth = VcoWorkflows::Cli::Auth.new(username: options[:username],
                                                password: options[:password])
+
+            # -------------------------------------------------------
+            # SSL is hard, and we should smartly default to verifying
+            # the server certificates because security, unless we
+            # were told to ignore it. So, figure that out.
+            # -------------------------------------------------------
+            # If it was never specified anywhere, assume true.
+            # If it was specified, use that regardless of definition value.
+            verify_ssl = options[:verify_ssl].nil? ? true : options[:verify_ssl]
+
+            # If it's in the platform definition and not on command line,
+            # use the platform definition value.
+            if component['verify_ssl'] && options[:verify_ssl].nil?
+              verify_ssl = component['verify_ssl'].downcase.eql('true') ? true : false
+            end
+
+            # Set up our options hash for requesting the workflow
             wfoptions = {
               url:        component['vco_url'],
               username:   auth.username,
               password:   auth.password,
-              verify_ssl: false
+              verify_ssl: verify_ssl
             }
+
             # Use the workflow GUID if one is provided in the component data
             wfoptions[:id] = component['workflow_id'] ? component['workflow_id'] : nil
             wf = VcoWorkflows::Workflow.new(component['workflow_name'], wfoptions)
+
+            # create an array for this workflow if it doesn't already exist
             running_jobs[wf.id] = [] unless running_jobs[wf.id]
           else
-            # id = component['worfklow_id'] ? component['workflow_id'] : nil
+            # This isn't my first rodeo
+
             id = nil
             if component['workflow_id']
               id = component['workflow_id']
             else
               id = wf.id if component['workflow_name'].eql?(wf.name)
             end
+
+            # Steal the workflow name and WorkflowService from our last go-around
             wf = VcoWorkflows::Workflow.new(wf.name, id: id, service: wf.service)
+            
+            # create an array for this workflow if it doesn't already exist
             running_jobs[wf.id] = [] unless running_jobs[wf.id]
           end
 
