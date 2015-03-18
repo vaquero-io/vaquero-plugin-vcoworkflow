@@ -62,15 +62,16 @@ module Putenv
             # the server certificates because security, unless we
             # were told to ignore it. So, figure that out.
             # -------------------------------------------------------
-            # If it was never specified anywhere, assume true.
-            # If it was specified, use that regardless of definition value.
-            verify_ssl = options[:verify_ssl].nil? ? true : options[:verify_ssl]
-
-            # If it's in the platform definition and not on command line,
-            # use the platform definition value.
-            if component['verify_ssl'] && options[:verify_ssl].nil?
-              verify_ssl = component['verify_ssl'].downcase.eql('true') ? true : false
+            # If we didn't specify on the command line
+            if options[:verify_ssl].nil?
+              # Default to true unless specified in the component definition
+              verify_ssl = component['verify_ssl'].nil? ? true : component['verify_ssl']
+            else
+              verify_ssl = options[:verify_ssl]
             end
+
+            # yay ssl!
+            # -------------------------------------------------------
 
             # Set up our options hash for requesting the workflow
             wfoptions = {
@@ -240,7 +241,7 @@ module Putenv
                 puts "; Run time #{(wftoken.end_date - wftoken.start_date) / 1000} seconds"
                 running_jobs[wfid].delete(execution)
                 wftoken.output_parameters.each do | k, v |
-                  puts " #{k}: #{v}"
+                  puts "   #{k}: #{v}"
                 end
               end
             end
