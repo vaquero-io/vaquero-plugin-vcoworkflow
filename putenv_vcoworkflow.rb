@@ -30,12 +30,12 @@ module Putenv
       def provision(env = nil, options = {})
         # Let's build our options hash...
         options = {
-          named_nodes: true,
-          username: nil,
-          password: nil,
-          verify_ssl: true,
-          verbose: false,
-          dry_run: false
+          named_nodes:    true,
+          username:       nil,
+          password:       nil,
+          verify_ssl:     true,
+          verbose:        false,
+          dry_run:        false
         }.merge(options)
 
         puts "\nExecuting build!\n"
