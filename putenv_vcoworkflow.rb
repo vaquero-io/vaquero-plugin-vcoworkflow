@@ -34,13 +34,18 @@ module Putenv
           username:       nil,
           password:       nil,
           verify_ssl:     true,
+          watch:          false,
+          watch_interval: 15,
           verbose:        false,
           dry_run:        false
         }.merge(options)
 
+        # Timekeeping
+        starttime = Time.now
+
         puts "\nExecuting build!\n"
 
-        running_jobs = []
+        running_jobs = {}
         wf = nil
         env['components'].each do |name, component|
           # Get the workflow.
@@ -58,6 +63,7 @@ module Putenv
             # Use the workflow GUID if one is provided in the component data
             wfoptions[:id] = component['workflow_id'] ? component['workflow_id'] : nil
             wf = VcoWorkflows::Workflow.new(component['workflow_name'], wfoptions)
+            running_jobs[wf.id] = [] unless running_jobs[wf.id]
           else
             # id = component['worfklow_id'] ? component['workflow_id'] : nil
             id = nil
@@ -67,6 +73,7 @@ module Putenv
               id = wf.id if component['workflow_name'].eql?(wf.name)
             end
             wf = VcoWorkflows::Workflow.new(wf.name, id: id, service: wf.service)
+            running_jobs[wf.id] = [] unless running_jobs[wf.id]
           end
 
           # Set the parameters and execute
@@ -84,7 +91,7 @@ module Putenv
             component['nodes'].each do |node|
               wf.parameters = set_parameters(name, component, env['product'], env['environment'], node)
               print "Requesting '#{wf.name}' execution for component #{name}, node #{node}..."
-              running_jobs << execute(wf, options[:dry_run], options[:verbose])
+              running_jobs[wf.id] << execute(wf, options[:dry_run], options[:verbose])
             end
 
             # Otherwise, we don't care what anything is named in chef, so submit
@@ -92,15 +99,21 @@ module Putenv
           else
             wf.parameters = set_parameters(name, component, env['product'], env['environment'])
             print "Requesting '#{wf.name}' execution for component #{component}..."
-            running_jobs << execute(wf, options[:dry_run], options[:verbose])
+            running_jobs[wf.id] << execute(wf, options[:dry_run], options[:verbose])
           end
         end
 
         return if options[:dry_run]
         puts "\nThe following executions of #{wf.name} have been submitted:"
-        running_jobs.each do |job|
-          puts "  - #{job}"
+        running_jobs.each_key do |wfid|
+          puts "- Workflow #{wfid}"
+          running_jobs[wfid].each do |execution|
+            puts "  - #{execution}"
+          end
         end
+
+        # If we've been asked to watch things, do so
+        watch_executions(wf, running_jobs, starttime, options[:watch_interval]) if options[:watch]
       end
       # rubocop:enable MethodLength, LineLength
       # rubocop:enable CyclomaticComplexity, PerceivedComplexity
@@ -154,6 +167,62 @@ module Putenv
           params['machineCount'] = component['count']
         end
         params
+      end
+      # rubocop:enable MethodLength, LineLength
+
+      # rubocop:disable MethodLength, LineLength
+
+      def watch_executions(wf = nil, running_jobs = {}, starttime = nil, watch_interval)
+        # ===================================================================
+        # Wait for all the requested workflows to complete
+        #
+
+        puts "\nWaiting for the following executions to complete:"
+        # running_jobs.each { |id| puts " - #{id}" }
+
+        # Make a hash of empty workflows so we can easily grab tokens based on
+        # execution IDs later. We steal the WorkflowService from the workflow
+        # we were called with to avoid having to set all that up again.
+        workflows = {}
+        running_jobs.each_key do |wfid|
+          workflows[wfid] = VcoWorkflows::Workflow.new(nil, id: wfid, service: wf.service)
+          puts "- Workflow #{wfid}"
+          running_jobs[wfid].each do |execution|
+            puts "  - #{execution}"
+          end
+        end
+
+        puts "Will wait #{watch_interval} seconds between checks."
+
+        while running_jobs.size > 0
+          sleep watch_interval
+          puts "\nChecking on running workflows (#{Time.now})..."
+          # running_jobs.each do |id|
+          # end
+          running_jobs.each_key do |wfid|
+            running_jobs[wfid].each do |execution|
+              wftoken = wf.token(execution)
+              print " - #{wfid} - #{execution} #{wftoken.state}"
+              if wftoken.alive?
+                puts ''
+              else
+                puts "; Run time #{(wftoken.end_date - wftoken.start_date) / 1000} seconds"
+                running_jobs[wfid].delete(execution)
+                wftoken.output_parameters.each do | k, v |
+                  puts " #{k}: #{v}"
+                end
+              end
+            end
+            running_jobs.delete(wfid) if running_jobs[wfid].size == 0
+          end
+        end
+
+        endtime = Time.now
+        puts ''
+        puts 'All workflows completed.'
+        puts "Started:  #{starttime}"
+        puts "Finished: #{endtime}"
+        puts "Total #{sprintf('%2f', endtime - starttime)} seconds"
       end
       # rubocop:enable MethodLength, LineLength
     end
