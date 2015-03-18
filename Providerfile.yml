@@ -15,6 +15,9 @@ provider:
         vco_url:
           type: URL
           # match: '\A([\w-]{3,}):\/\/((?:[\w-]+\.?)+)(:[\d]+)?\/?\z'
+        verify_ssl:
+          type: boolean
+          match: '\A(true|false)\z'
         workflow_name:
           type: string
           match: '\A(?:[ \w-]+\/?)+\z'
