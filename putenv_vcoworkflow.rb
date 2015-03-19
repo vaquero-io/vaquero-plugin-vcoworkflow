@@ -182,7 +182,7 @@ module Putenv
         params['location']     = component['location'] if component['location']
 
         params['runlist'] = []
-        params['runlist'] << component['run_list'] if component['run_list']
+        params['runlist'] += component['run_list'] if component['run_list']
         params['runlist'] << component['component_role'] if component['component_role']
 
         if !nodename.nil?
