@@ -185,11 +185,11 @@ module Putenv
         params['runlist'] += component['run_list'] if component['run_list']
         params['runlist'] << component['component_role'] if component['component_role']
 
-        if !nodename.nil?
+        if nodename.nil?
+          params['machineCount'] = component['count']
+        else
           params['machineCount'] = 1
           params['nodename']     = nodename
-        else
-          params['machineCount'] = component['count']
         end
 
         # TODO: figure out how we're going to handle attributes / tags
