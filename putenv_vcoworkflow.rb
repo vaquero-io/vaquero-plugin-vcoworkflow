@@ -41,7 +41,7 @@ module Putenv
         }.merge(options)
 
         # Timekeeping
-        starttime = Time.now
+        start_time = Time.now
 
         puts "\nExecuting build!\n"
 
@@ -141,7 +141,7 @@ module Putenv
         end
 
         # If we've been asked to watch things, do so
-        watch_executions(wf, running_jobs, starttime, options[:watch_interval]) if options[:watch]
+        watch_executions(wf.service, running_jobs, start_time, options[:watch_interval]) if options[:watch]
       end
       # rubocop:enable MethodLength, LineLength
       # rubocop:enable CyclomaticComplexity, PerceivedComplexity
@@ -204,23 +204,15 @@ module Putenv
 
       # rubocop:disable MethodLength, LineLength
 
-      def watch_executions(wf = nil, running_jobs = {}, starttime = nil, watch_interval)
+      def watch_executions(wf_service = nil, running_jobs = {}, start_time = nil, watch_interval)
         # ===================================================================
         # Wait for all the requested workflows to complete
         #
-
         puts "\nWaiting for the following executions to complete:"
-        # running_jobs.each { |id| puts " - #{id}" }
-
-        # Make a hash of empty workflows so we can easily grab tokens based on
-        # execution IDs later. We steal the WorkflowService from the workflow
-        # we were called with to avoid having to set all that up again.
-        workflows = {}
-        running_jobs.each_key do |wfid|
-          workflows[wfid] = VcoWorkflows::Workflow.new(nil, id: wfid, service: wf.service)
-          puts "- Workflow #{wfid}"
-          running_jobs[wfid].each do |execution|
-            puts "  - #{execution}"
+        running_jobs.each_key do |wf_id|
+          puts "- Workflow #{wf_id}"
+          running_jobs[wf_id].each do |execution_id|
+            puts "  - #{execution_id}"
           end
         end
 
@@ -228,33 +220,32 @@ module Putenv
 
         while running_jobs.size > 0
           sleep watch_interval
+
           puts "\nChecking on running workflows (#{Time.now})..."
-          # running_jobs.each do |id|
-          # end
-          running_jobs.each_key do |wfid|
-            running_jobs[wfid].each do |execution|
-              wftoken = wf.token(execution)
-              print " - #{wfid} - #{execution} #{wftoken.state}"
-              if wftoken.alive?
+          running_jobs.each_key do |wf_id|
+            running_jobs[wf_id].each do |execution_id|
+              wf_token = VcoWorkflows::WorkflowToken.new(wf_service, wf_id, execution_id)
+              print " - #{wf_id} - #{execution_id} #{wf_token.state}"
+              if wf_token.alive?
                 puts ''
               else
-                puts "; Run time #{(wftoken.end_date - wftoken.start_date) / 1000} seconds"
-                running_jobs[wfid].delete(execution)
-                wftoken.output_parameters.each do | k, v |
+                puts "; Run time #{(wf_token.end_date - wf_token.start_date) / 1000} seconds"
+                running_jobs[wf_id].delete(execution_id)
+                wf_token.output_parameters.each do |k, v|
                   puts "   #{k}: #{v}"
                 end
               end
             end
-            running_jobs.delete(wfid) if running_jobs[wfid].size == 0
+            running_jobs.delete(wf_id) if running_jobs[wf_id].size == 0
           end
         end
 
-        endtime = Time.now
+        end_time = Time.now
         puts ''
         puts 'All workflows completed.'
-        puts "Started:  #{starttime}"
-        puts "Finished: #{endtime}"
-        puts "Total #{sprintf('%2f', endtime - starttime)} seconds"
+        puts "Started:  #{start_time}"
+        puts "Finished: #{end_time}"
+        puts "Total #{format('%2f', end_time - start_time)} seconds"
       end
       # rubocop:enable MethodLength, LineLength
     end
