@@ -223,9 +223,10 @@ module Putenv
 
           puts "\nChecking on running workflows (#{Time.now})..."
           running_jobs.each_key do |wf_id|
+            puts "- #{wf_id}"
             running_jobs[wf_id].each do |execution_id|
               wf_token = VcoWorkflows::WorkflowToken.new(wf_service, wf_id, execution_id)
-              print " - #{wf_id} - #{execution_id} #{wf_token.state}"
+              print "  - #{execution_id} #{wf_token.state}"
               if wf_token.alive?
                 puts ''
               else
