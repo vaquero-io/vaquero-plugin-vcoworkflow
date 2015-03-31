@@ -1,7 +1,7 @@
 provider:
-  name: putenv-vcoworkflow
+  name: vaquero-vcoworkflow
   version: 0.1.0.pre
-  location: https://github.com/activenetwork-automation/putenv-vcoworkflow.git
+  location: https://github.com/vaquero-io/vaquero-vcoworkflow.git
 
   structure:
 

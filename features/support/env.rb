@@ -1,6 +1,6 @@
 require 'aruba/cucumber'
 require 'aruba/in_process'
-require 'putenv/runner'
+require 'vaquero/runner'
 require 'coveralls'
 
 ENV['PATH'] = "/lib#{File::PATH_SEPARATOR}#{ENV['PATH']}"

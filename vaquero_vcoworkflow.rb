@@ -16,7 +16,7 @@ rescue LoadError => e
   raise e
 end
 
-module Putenv
+module Vaquero
   # Platform
   class Platform
     # Provision
