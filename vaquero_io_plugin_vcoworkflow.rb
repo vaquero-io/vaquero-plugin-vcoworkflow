@@ -16,7 +16,7 @@ rescue LoadError => e
   raise e
 end
 
-module Vaquero
+module VaqueroIo
   # Platform
   class Platform
     # Provision
