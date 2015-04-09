@@ -1,4 +1,4 @@
 source 'https://rubygems.org'
 
 gem 'vcoworkflows'
-gem 'vaquero'
+gem 'vaquero_io'

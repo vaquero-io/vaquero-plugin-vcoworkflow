@@ -1,7 +1,7 @@
 provider:
-  name: vaquero-plugin-vcoworkflow
-  version: 0.1.0
-  location: https://github.com/vaquero-io/vaquero-plugin-vcoworkflow.git
+  name: vaquero_io-plugin-vcoworkflow
+  version: 0.1.1
+  location: https://github.com/vaquero-io/vaquero_io-plugin-vcoworkflow.git
 
   structure:
 

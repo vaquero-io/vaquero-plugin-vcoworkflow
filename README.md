@@ -1,4 +1,4 @@
-vaquero-plugin-vcoworkflow
+vaquero_io-plugin-vcoworkflow
 ==================
 
 This is a vaquero plugin to interface with vCenter Orchestrator workflows.

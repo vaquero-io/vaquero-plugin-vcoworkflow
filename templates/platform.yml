@@ -1,10 +1,10 @@
 platform:
 
   # The name of the provider to use.
-  provider: vaquero-vcoworkflow
+  provider: vaquero_io-plugin-vcoworkflow
 
   # The version of the provider
-  plugin_version: 0.1.0.pre
+  plugin_version: 0.1.0
 
   # The product name for the whole platform.
   # This will be used as the value for the Chef Org,
