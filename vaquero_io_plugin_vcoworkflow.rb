@@ -27,6 +27,14 @@ module VaqueroIo
       # Provision
       # Given an environment hash, provision the requested resources
       # @param [Hash] env - Environment hash
+      #  - named_nodes (Boolean) Are we naming our chef nodes instead of using fqdn?
+      #  - username (String) vCO username
+      #  - password (String) vCO password
+      #  - watch (Boolean) Stick around to watch status of our jobs
+      #  - watch_interval (Integer) How many seconds should we wait between updates when watching?
+      #  - verify_ssl (Boolean) Perform TLS/SSL certificate validation
+      #  - verbose (Boolean) run verbosely
+      #  - dry_run (Boolean) Dry run; don't actually do anything.
       def provision(env = nil, options = {})
         # Let's build our options hash...
         options = {
@@ -108,7 +116,7 @@ module VaqueroIo
           # Set the parameters and execute
           # If we're doing named nodes (i.e., chef nodes have specific names
           # per the node naming convention in the platform definition), then
-          # we need to submit every indivitual node build request to the
+          # we need to submit every individual node build request to the
           # workflow separately.
           if options[:named_nodes]
             # quick sanity check; if number of nodes != count, fail
