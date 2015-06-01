@@ -52,11 +52,6 @@ module VaqueroIo
           if wf.nil?
             # This is our first time. Be gentle.
 
-            # Steal the VcoWorkflows CLI auth class to yank values from the
-            # environment if we weren't given anything useful
-            auth = VcoWorkflows::Cli::Auth.new(username: options[:username],
-                                               password: options[:password])
-
             # -------------------------------------------------------
             # SSL is hard, and we should smartly default to verifying
             # the server certificates because security, unless we
@@ -73,16 +68,22 @@ module VaqueroIo
             # yay ssl!
             # -------------------------------------------------------
 
-            # Set up our options hash for requesting the workflow
-            wfoptions = {
-              url:        component['vco_url'],
-              username:   auth.username,
-              password:   auth.password,
-              verify_ssl: verify_ssl
-            }
+            # Start by pulling config from the default configuration file
+            config = VcoWorkflows::Config.new
+
+            # update any parameters we were passed
+            config.url        = component['vco_url'] if component['vco_url']
+            config.username   = options[:username] if options[:username]
+            config.password   = options[:password] if options[:password]
+            config.verify_ssl = verify_ssl
+
+            # Create an options hash for the workflow
+            wfoptions = { config: config }
 
             # Use the workflow GUID if one is provided in the component data
             wfoptions[:id] = component['workflow_id'] ? component['workflow_id'] : nil
+
+            # Create the workflow
             wf = VcoWorkflows::Workflow.new(component['workflow_name'], wfoptions)
 
             # create an array for this workflow if it doesn't already exist
