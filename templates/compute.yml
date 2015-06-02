@@ -6,22 +6,13 @@ compute:
   #   dev:
   #     cpu: 2
   #     ram: 1
-  #     drive:
-  #       mount: '/media/data'\
-  #       capacity: 8192
   #     image: 'centos-7'
   #
   #   prod:
   #     cpu: 2
   #     ram: 12
-  #     drive:
-  #       mount: '/media/data'\
-  #       capacity: 8192
   #
   default: &default
     cpu:
     ram:
-#    drive:
-#      mount:
-#      capacity:
     image:
