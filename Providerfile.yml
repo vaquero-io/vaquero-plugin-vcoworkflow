@@ -37,6 +37,9 @@ provider:
         component_role:
           type: string
           match: '(role|recipe)\[([-_a-zA-Z0-9#]+)\]'
+        location:
+          type: string
+          match: '\A(us|ca)(east|west|test|dr)\z'
 
     compute:
       path: 'infrastructure/'
