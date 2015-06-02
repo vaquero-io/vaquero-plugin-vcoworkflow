@@ -113,6 +113,7 @@ platform:
 
     defaultpool: &defaultpool
       vco_url:
+      verify_ssl: true
       workflow_name:
       workflow_id:
       reservation_policy:
