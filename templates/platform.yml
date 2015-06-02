@@ -117,6 +117,7 @@ platform:
       workflow_id:
       reservation_policy:
       execute_on_behalf_of:
+      location:
 
       compute:
       count:
