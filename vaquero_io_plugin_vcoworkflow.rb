@@ -27,6 +27,14 @@ module VaqueroIo
       # Provision
       # Given an environment hash, provision the requested resources
       # @param [Hash] env - Environment hash
+      #  - named_nodes (Boolean) Are we naming our chef nodes instead of using fqdn?
+      #  - username (String) vCO username
+      #  - password (String) vCO password
+      #  - watch (Boolean) Stick around to watch status of our jobs
+      #  - watch_interval (Integer) How many seconds should we wait between updates when watching?
+      #  - verify_ssl (Boolean) Perform TLS/SSL certificate validation
+      #  - verbose (Boolean) run verbosely
+      #  - dry_run (Boolean) Dry run; don't actually do anything.
       def provision(env = nil, options = {})
         # Let's build our options hash...
         options = {
@@ -52,11 +60,6 @@ module VaqueroIo
           if wf.nil?
             # This is our first time. Be gentle.
 
-            # Steal the VcoWorkflows CLI auth class to yank values from the
-            # environment if we weren't given anything useful
-            auth = VcoWorkflows::Cli::Auth.new(username: options[:username],
-                                               password: options[:password])
-
             # -------------------------------------------------------
             # SSL is hard, and we should smartly default to verifying
             # the server certificates because security, unless we
@@ -73,16 +76,22 @@ module VaqueroIo
             # yay ssl!
             # -------------------------------------------------------
 
-            # Set up our options hash for requesting the workflow
-            wfoptions = {
-              url:        component['vco_url'],
-              username:   auth.username,
-              password:   auth.password,
-              verify_ssl: verify_ssl
-            }
+            # Start by pulling config from the default configuration file
+            config = VcoWorkflows::Config.new
+
+            # update any parameters we were passed
+            config.url        = component['vco_url'] if component['vco_url']
+            config.username   = options[:username] if options[:username]
+            config.password   = options[:password] if options[:password]
+            config.verify_ssl = verify_ssl
+
+            # Create an options hash for the workflow
+            wfoptions = { config: config }
 
             # Use the workflow GUID if one is provided in the component data
             wfoptions[:id] = component['workflow_id'] ? component['workflow_id'] : nil
+
+            # Create the workflow
             wf = VcoWorkflows::Workflow.new(component['workflow_name'], wfoptions)
 
             # create an array for this workflow if it doesn't already exist
@@ -107,7 +116,7 @@ module VaqueroIo
           # Set the parameters and execute
           # If we're doing named nodes (i.e., chef nodes have specific names
           # per the node naming convention in the platform definition), then
-          # we need to submit every indivitual node build request to the
+          # we need to submit every individual node build request to the
           # workflow separately.
           if options[:named_nodes]
             # quick sanity check; if number of nodes != count, fail

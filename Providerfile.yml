@@ -1,6 +1,6 @@
 provider:
   name: vaquero_io-plugin-vcoworkflow
-  version: 0.1.2
+  version: 0.2.0
   location: https://github.com/vaquero-io/vaquero_io-plugin-vcoworkflow.git
 
   structure:
@@ -12,9 +12,10 @@ provider:
     platform:
       path:
       params:
+
+        # specific for vcoworkflows
         vco_url:
           type: URL
-          # match: '\A([\w-]{3,}):\/\/((?:[\w-]+\.?)+)(:[\d]+)?\/?\z'
         verify_ssl:
           type: boolean
           match: '\A(true|false)\z'
@@ -27,6 +28,7 @@ provider:
         execute_on_behalf_of:
           type: string
           match: '\A(?:([-\._\w-]+)(?:@([\.\w-]+))?)\z'
+
         count:
           type: integer
           range: 1..40
